@@ -9,7 +9,7 @@ show(pattern)
 
 
 
-function show(pattern){
+function show(){
     const board = document.querySelector('#board');
     board.innerHTML = '';
     for(let i =0; i < 3; i++){
@@ -18,7 +18,7 @@ function show(pattern){
             cell.classList.add('cell');
             cell.innerText = pattern[i][j] === 2 ? '❌' : pattern[i][j] === 1 ? '⭕' : '';
             cell.addEventListener('click', () => {
-                move(i, j)
+                userMove(i, j)
             });
             board.appendChild(cell)
         }
@@ -26,19 +26,33 @@ function show(pattern){
     }
 }
 
-function move(x, y){
+function userMove(x, y){
     if(pattern[x][y]) return;
     pattern[x][y] = color;
     if(check(pattern, color)){
-        console.log(color === 2 ? '❌ is winner' : '⭕ is winner')
+        alert(color === 2 ? '❌ is winner' : '⭕ is winner')
     }
     color = 3 - color;
     // 查看下一回合对手的情况
     console.log(`${color === 2 ? '❌' : '⭕'}的最好选择结果`, bestChoice(pattern, color))
-    show(pattern);
-    if(willWin(pattern, color)){
-        console.log(color === 2 ? '❌ will win' : '⭕ will win')
+    show();
+
+    computerMove()
+    // if(willWin(pattern, color)){
+    //     console.log(color === 2 ? '❌ will win' : '⭕ will win')
+    // }
+}
+
+function computerMove(){
+    let choice = bestChoice(pattern, color);
+    if(choice.point){
+        pattern[choice.point[0]][choice.point[1]] = color;
     }
+    if(check(pattern, color)){
+        alert(color === 2 ? '❌ is winner' : '⭕ is winner')
+    }
+    color = 3 - color;
+    show();
 }
 
 function check(pattern, color){
